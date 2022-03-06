@@ -58,8 +58,6 @@ userSchema.methods.getJwtLoginToken = async function () {
     }
   );
 
-  this.tokens = this.tokens.concat({ token });
-  await this.save();
   return token;
 };
 
