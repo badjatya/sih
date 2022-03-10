@@ -63,6 +63,14 @@ exports.login = async (req, res) => {
     // Valid user, creating jwt token valid for 2days
     const token = await user.getJwtLoginToken();
 
+    // Sending a cookie valid for 2days
+    res.cookie("token", token, {
+      expires: new Date(
+        Date.now() * process.env.COOKIE_TIME * 24 * 60 * 60 * 1000
+      ),
+      httpOnly: true,
+    });
+
     // Sending response
     res.json({
       status: "success",
