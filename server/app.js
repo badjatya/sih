@@ -17,11 +17,9 @@ app.use(
   })
 );
 
-app.get("/", (req, res) => {
-  res.json({ name: "Server", message: "Hello from server!" });
-});
-
+// Routes
 app.use("/api/v1/users", require("./src/routes/user"));
+app.use("/api/v1/institutes", require("./src/routes/institute"));
 
 // Exporting app
 module.exports = app;
