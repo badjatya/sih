@@ -103,7 +103,7 @@ exports.getAllInstitutes = async (req, res) => {
   }
 };
 
-// Get all institutes
+// Get single institutes
 exports.getSingleInstitute = async (req, res) => {
   try {
     const institute = await Institute.findById(req.params.id);
@@ -123,7 +123,7 @@ exports.getSingleInstitute = async (req, res) => {
   }
 };
 
-// Get all institutes
+// Get top 10 institutes
 exports.getTopTenInstitutes = async (req, res) => {
   try {
     const institutes = await Institute.find()
@@ -141,10 +141,46 @@ exports.getTopTenInstitutes = async (req, res) => {
   }
 };
 
-// Get all institutes
+// Get top 10 government institutes
 exports.getTopTenGovernmentInstitutes = async (req, res) => {
   try {
     const institutes = await Institute.find({ type: "Government" })
+      .sort("rank")
+      .select(["_id", "name", "location", "type", "images", "rank"])
+      .limit(10);
+
+    // response
+    res.status(200).json({
+      status: "success",
+      institutes,
+    });
+  } catch (error) {
+    customError(res, 500, error.message, "error");
+  }
+};
+
+// Get top 10 semi government institutes
+exports.getTopTenSemiGovernmentInstitutes = async (req, res) => {
+  try {
+    const institutes = await Institute.find({ type: "Semi Government" })
+      .sort("rank")
+      .select(["_id", "name", "location", "type", "images", "rank"])
+      .limit(10);
+
+    // response
+    res.status(200).json({
+      status: "success",
+      institutes,
+    });
+  } catch (error) {
+    customError(res, 500, error.message, "error");
+  }
+};
+
+// Get top 10 private institutes
+exports.getTopTenPrivateInstitutes = async (req, res) => {
+  try {
+    const institutes = await Institute.find({ type: "Private" })
       .sort("rank")
       .select(["_id", "name", "location", "type", "images", "rank"])
       .limit(10);
