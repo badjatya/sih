@@ -126,7 +126,7 @@ const instituteSchema = new mongoose.Schema(
     images: [
       {
         id: {
-          type: Number,
+          type: String,
         },
         url: {
           type: String,

@@ -1,6 +1,9 @@
 // Model
 const Institute = require("../models/institute");
 
+// Lib
+const cloudinary = require("cloudinary");
+
 // Utils
 const customError = require("../utils/customError");
 const instituteQueryHandler = require("../utils/instituteQueryHandler");
@@ -63,6 +66,55 @@ exports.createInstitute = async (req, res) => {
       status: "success",
       message: "Institute created successfully",
       institute,
+    });
+  } catch (error) {
+    customError(res, 500, error.message, "error");
+  }
+};
+
+// upload images
+exports.uploadInstituteImages = async (req, res) => {
+  try {
+    const institute = await Institute.findById(req.params.id);
+
+    // Saving images to cloudinary
+    let imageArray = [];
+    // Uploading image based on single image or multiple image
+    if (req.files.images.length !== undefined) {
+      for (let index = 0; index < req.files.images.length; index++) {
+        let result = await cloudinary.v2.uploader.upload(
+          req.files.images[index].tempFilePath,
+          {
+            folder: "beducated/institutes",
+          }
+        );
+
+        imageArray.push({
+          id: result.public_id,
+          url: result.secure_url,
+        });
+      }
+    } else {
+      let result = await cloudinary.v2.uploader.upload(
+        req.files.images.tempFilePath,
+        {
+          folder: "beducated/institutes",
+        }
+      );
+
+      imageArray.push({
+        id: result.public_id,
+        url: result.secure_url,
+      });
+    }
+
+    // Saving images to db
+    institute.images = imageArray;
+    await institute.save();
+
+    res.json({
+      status: "success",
+      message: "Institute images uploaded successfully",
     });
   } catch (error) {
     customError(res, 500, error.message, "error");

@@ -9,6 +9,7 @@ const {
   getTopTenGovernmentInstitutes,
   getTopTenSemiGovernmentInstitutes,
   getTopTenPrivateInstitutes,
+  uploadInstituteImages,
 } = require("../controllers/institute");
 
 // User middleware
@@ -16,6 +17,9 @@ const { isLoggedIn, customRole } = require("../middlewares/user");
 
 // Institute Admin
 router.route("/create").post(isLoggedIn, customRole("admin"), createInstitute);
+router
+  .route("/create/images/:id")
+  .post(isLoggedIn, customRole("admin"), uploadInstituteImages);
 
 // Logged in user
 router.route("/").get(isLoggedIn, getAllInstitutes);
