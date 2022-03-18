@@ -73,7 +73,14 @@ exports.createInstitute = async (req, res) => {
 exports.getAllInstitutes = async (req, res) => {
   try {
     let institutes = new instituteQueryHandler(
-      Institute.find({}).select(["_id", "name", "location", "type", "images"]),
+      Institute.find({}).select([
+        "_id",
+        "name",
+        "location",
+        "type",
+        "rank",
+        "images",
+      ]),
       req.query
     )
       .search()
@@ -110,6 +117,24 @@ exports.getSingleInstitute = async (req, res) => {
     res.status(200).json({
       status: "success",
       institute,
+    });
+  } catch (error) {
+    customError(res, 500, error.message, "error");
+  }
+};
+
+// Get all institutes
+exports.getTopTenInstitutes = async (req, res) => {
+  try {
+    const institutes = await Institute.find()
+      .sort("rank")
+      .select(["_id", "name", "location", "type", "images", "rank"])
+      .limit(10);
+
+    // response
+    res.status(200).json({
+      status: "success",
+      institutes,
     });
   } catch (error) {
     customError(res, 500, error.message, "error");
