@@ -140,3 +140,21 @@ exports.getTopTenInstitutes = async (req, res) => {
     customError(res, 500, error.message, "error");
   }
 };
+
+// Get all institutes
+exports.getTopTenGovernmentInstitutes = async (req, res) => {
+  try {
+    const institutes = await Institute.find({ type: "Government" })
+      .sort("rank")
+      .select(["_id", "name", "location", "type", "images", "rank"])
+      .limit(10);
+
+    // response
+    res.status(200).json({
+      status: "success",
+      institutes,
+    });
+  } catch (error) {
+    customError(res, 500, error.message, "error");
+  }
+};
