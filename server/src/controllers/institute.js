@@ -95,3 +95,23 @@ exports.getAllInstitutes = async (req, res) => {
     customError(res, 500, error.message, "error");
   }
 };
+
+// Get all institutes
+exports.getSingleInstitute = async (req, res) => {
+  try {
+    const institute = await Institute.findById(req.params.id);
+
+    // If not found
+    if (!institute) {
+      return customError(res, 404, "Institute not found");
+    }
+
+    // response
+    res.status(200).json({
+      status: "success",
+      institute,
+    });
+  } catch (error) {
+    customError(res, 500, error.message, "error");
+  }
+};
