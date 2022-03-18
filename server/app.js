@@ -18,6 +18,12 @@ app.use(
 );
 
 // Routes
+app.get("/", (req, res) => {
+  res.json({
+    status: "success",
+    message: "Backend is working",
+  });
+});
 app.use("/api/v1/users", require("./src/routes/user"));
 app.use("/api/v1/institutes", require("./src/routes/institute"));
 
