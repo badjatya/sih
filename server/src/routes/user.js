@@ -10,7 +10,7 @@ const { isLoggedIn } = require("../middlewares/user");
 
 // Auth
 router.route("/signup").post(createUser);
-router.route("/login").post(login);
-router.route("/logout").get(isLoggedIn, logout);
+router.route("/signin").post(login);
+router.route("/signout").get(isLoggedIn, logout);
 
 module.exports = router;

@@ -10,18 +10,26 @@ const {
   getTopTenSemiGovernmentInstitutes,
   getTopTenPrivateInstitutes,
   uploadInstituteImages,
+  updateSingleInstitute,
+  deleteSingleInstitute,
 } = require("../controllers/institute");
 
 // User middleware
 const { isLoggedIn, customRole } = require("../middlewares/user");
 
-// Institute Admin
+//* Institute Admin
 router.route("/create").post(isLoggedIn, customRole("admin"), createInstitute);
 router
   .route("/create/images/:id")
   .post(isLoggedIn, customRole("admin"), uploadInstituteImages);
+router
+  .route("/update/:id")
+  .patch(isLoggedIn, customRole("admin"), updateSingleInstitute);
+router
+  .route("/delete/:id")
+  .delete(isLoggedIn, customRole("admin"), deleteSingleInstitute);
 
-// Logged in user
+//* Logged in user
 router.route("/").get(isLoggedIn, getAllInstitutes);
 router.route("/top-ten").get(isLoggedIn, getTopTenInstitutes);
 router

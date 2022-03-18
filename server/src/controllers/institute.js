@@ -8,6 +8,7 @@ const cloudinary = require("cloudinary");
 const customError = require("../utils/customError");
 const instituteQueryHandler = require("../utils/instituteQueryHandler");
 
+// * ADMIN
 // Creating a new Institute
 exports.createInstitute = async (req, res) => {
   const {
@@ -121,6 +122,57 @@ exports.uploadInstituteImages = async (req, res) => {
   }
 };
 
+// update institute
+exports.updateSingleInstitute = async (req, res) => {
+  try {
+    const institute = await Institute.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    // If institute not found
+    if (!institute) {
+      return customError(res, 404, "Institute not found");
+    }
+
+    res.json({
+      status: "success",
+      message: "Institute updated successfully",
+    });
+  } catch (error) {
+    customError(res, 500, error.message, "error");
+  }
+};
+
+// delete institute
+exports.deleteSingleInstitute = async (req, res) => {
+  try {
+    const institute = await Institute.findById(req.params.id);
+
+    // If institute not found
+    if (!institute) {
+      return customError(res, 404, "Institute not found");
+    }
+
+    // Removing product image
+    for (let index = 0; index < institute.images.length; index++) {
+      // Deleting images
+      await cloudinary.v2.uploader.destroy(institute.images[index].id);
+    }
+
+    await institute.remove();
+
+    res.json({
+      status: "success",
+      message: "Institute deleted successfully",
+    });
+  } catch (error) {
+    customError(res, 500, error.message, "error");
+  }
+};
+
+// * User
 // Get all institutes
 exports.getAllInstitutes = async (req, res) => {
   try {
