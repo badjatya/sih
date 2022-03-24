@@ -71,6 +71,10 @@ exports.login = async (req, res) => {
       httpOnly: true,
     });
 
+    // Hiding secure data
+    user.password = undefined;
+    user.__v = undefined;
+
     // Sending response
     res.json({
       status: "success",

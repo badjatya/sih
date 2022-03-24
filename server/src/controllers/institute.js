@@ -61,7 +61,10 @@ exports.createInstitute = async (req, res) => {
   }
 
   try {
-    const institute = await Institute.create(req.body);
+    const institute = await Institute.create({
+      ...req.body,
+      user: req.user._id,
+    });
 
     res.json({
       status: "success",

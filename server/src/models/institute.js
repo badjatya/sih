@@ -20,6 +20,11 @@ const instituteSchema = new mongoose.Schema(
       trim: true,
       maxlength: [1000, "Description must be less than 1000 characters"],
     },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: [true, "User is required"],
+      ref: "User",
+    },
     rank: {
       type: Number,
       required: [true, "A institute must have a rank"],
